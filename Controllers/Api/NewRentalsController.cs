@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace LibApp.Controllers.Api
 {
@@ -15,9 +16,11 @@ namespace LibApp.Controllers.Api
     [ApiController]
     public class NewRentalsController : ControllerBase
     {
-        public NewRentalsController(ApplicationDbContext context)
+        public NewRentalsController(ApplicationDbContext context, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signIn)
         {
             _context = context;
+            _userManager = userManager;
+            _signIn = signIn;
         }
 
         [HttpPost]
@@ -54,5 +57,7 @@ namespace LibApp.Controllers.Api
         }
 
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signIn;
     }
 }

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper.Internal;
 using LibApp.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,47 +11,67 @@ namespace LibApp.Models
 {
     public static class SeedData
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static async Task Initialize(IServiceProvider serviceProvider)
         {
-            using (var context = new ApplicationDbContext(
-                serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
-            {
-                if (context.MembershipTypes.Any())
-                {
-                    Console.WriteLine("Database already seeded");
-                    return;
-                }
+            await using var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            using var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-                context.MembershipTypes.AddRange(
-                    new MembershipType
-                    {
-                        Id = 1,
-                        SignUpFee = 0,
-                        DurationInMonths = 0,
-                        DiscountRate = 0
-                    },
-                    new MembershipType
-                    {
-                        Id = 2,
-                        SignUpFee = 30,
-                        DurationInMonths = 1,
-                        DiscountRate = 10
-                    },
-                    new MembershipType
-                    {
-                        Id = 3,
-                        SignUpFee = 90,
-                        DurationInMonths = 3,
-                        DiscountRate = 15
-                    },
-                    new MembershipType
-                    {
-                        Id = 4,
-                        SignUpFee = 300,
-                        DurationInMonths = 12,
-                        DiscountRate = 20
-                    });
-                context.Rentals.AddRange(
+            if (!roleManager.Roles.Any())
+            {
+                var roles = new[]
+                {
+                    RolesConstants.Owner,
+                    RolesConstants.StoreManager,
+                    RolesConstants.User
+                };
+
+                foreach (var role in roles)
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
+
+            if (context.MembershipTypes.Any())
+            {
+                Console.WriteLine("Database already seeded");
+                return;
+            }
+
+            context.MembershipTypes.AddRange(
+                new MembershipType
+                {
+                    Id = 1,
+                    Name = "membershiptype1",
+                    SignUpFee = 0,
+                    DurationInMonths = 0,
+                    DiscountRate = 0
+                },
+                new MembershipType
+                {
+                    Id = 2,
+                    Name = "membershiptype2",
+                    SignUpFee = 30,
+                    DurationInMonths = 1,
+                    DiscountRate = 10
+                },
+                new MembershipType
+                {
+                    Id = 3,
+                    Name = "membershiptype3",
+                    SignUpFee = 90,
+                    DurationInMonths = 3,
+                    DiscountRate = 15
+                },
+                new MembershipType
+                {
+                    Id = 4,
+                    Name = "membershiptype4",
+                    SignUpFee = 300,
+                    DurationInMonths = 12,
+                    DiscountRate = 20
+                });
+
+            context.Rentals.AddRange(
                 new Rental
                 {
                     Customer = new Customer
@@ -113,8 +136,9 @@ namespace LibApp.Models
                     DateRented = DateTime.Now.AddDays(-1)
                 }
                 );
-                context.SaveChanges();
-            }
+
+            await context.SaveChangesAsync();
         }
+
     }
 }

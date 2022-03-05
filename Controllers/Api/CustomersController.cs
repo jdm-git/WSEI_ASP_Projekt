@@ -100,6 +100,7 @@ namespace LibApp.Controllers.Api
 
         // DELETE /api/customers/{id}
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Owner")]
         public void DeleteCustomer(int id)
         {
             var customerInDb = _context.Customers.Single(c => c.Id == id);

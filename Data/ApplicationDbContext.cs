@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using LibApp.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace LibApp.Data
 {
@@ -18,11 +19,6 @@ namespace LibApp.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-        }
-
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
         }
     }
 }

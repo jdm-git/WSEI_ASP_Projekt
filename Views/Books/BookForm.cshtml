@@ -11,29 +11,32 @@
     <div class="form-group">
         @Html.LabelFor(m => m.Book.Name)
         @Html.TextBoxFor(m => m.Book.Name, new { @class = "form-control" })
-
-        @*<label for="Name" class="form-label">Name</label>
-            <input type="text" class="form-contorl" id="Name" />*@
-
+        @Html.ValidationMessageFor(x => x.Book.Name)
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.Book.AuthorName)
         @Html.TextBoxFor(m => m.Book.AuthorName, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Book.AuthorName)
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.Book.GenreId)
         @Html.DropDownListFor(m => m.Book.GenreId, new SelectList(Model.Genres, "Id", "Name"), "Select Genre", new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Book.GenreId)
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.Book.ReleaseDate)
         @Html.TextBoxFor(m => m.Book.ReleaseDate, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Book.ReleaseDate)
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.Book.NumberInStock)
         @Html.TextBoxFor(m => m.Book.NumberInStock, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Book.NumberInStock)
     </div>
 
+    @Html.ValidationSummary();
 
+    @Html.AntiForgeryToken();
     @Html.HiddenFor(m => m.Book.Id);
     <button type="submit" class="btn btn-primary">Save</button>
 }

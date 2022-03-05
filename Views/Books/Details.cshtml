@@ -8,7 +8,12 @@
 <ul>
     <li>Author Name: @Model.AuthorName</li>
     <li>Genre: @Model.Genre.Name</li>
-    <li>Release Date: @Model.ReleaseDate.ToShortDateString()</li>
+    <li>Release Date: @Model.ReleaseDate?.ToShortDateString()</li>
     <li>Date Added: @Model.DateAdded.ToShortDateString()</li>
     <li>Number in Stock: @Model.NumberInStock</li>
 </ul>
+
+@if (User.IsInRole(RolesConstants.StoreManager) || User.IsInRole(RolesConstants.Owner))
+{
+    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+}
